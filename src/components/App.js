@@ -1,11 +1,12 @@
 import React from 'react';
 
-function App() {
+const App = () => {
   return (
-    <>
-      template
-    </>
-  );
+    <div>
+      components
+    </div>
+  )
 }
 
-export default App;
+export default App
+
