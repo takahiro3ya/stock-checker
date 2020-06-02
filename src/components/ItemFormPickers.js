@@ -3,7 +3,7 @@
  * https://material-ui.com/components/pickers/#material-ui-pickers
  */
 import 'date-fns'
-import React, { useState } from 'react'
+import React from 'react'
 import DateFnsUtils from '@date-io/date-fns'
 import {
   MuiPickersUtilsProvider,
@@ -15,7 +15,6 @@ import { makeStyles } from '@material-ui/core/styles'
 import { createMuiTheme } from "@material-ui/core"
 import { ThemeProvider } from "@material-ui/styles"
 import lightGreen from '@material-ui/core/colors/lightGreen'
-
 
 // カレンダーの表示形式をカスタマイズ
 class ExtendedUtils extends DateFnsUtils {
@@ -63,12 +62,19 @@ const useStyles = makeStyles((theme) => ({
   },
 }))
 
-const ItemFormPickers = () => {
+const ItemFormPickers = ({ selectedDate, setSelectedDate }) => {
   // The first commit of Material-UI
-  const [selectedDate, setSelectedDate] = useState(null)
+  // const [selectedDate, setSelectedDate] = useState(null) // 親からpropsとして受け取る。
 
-  const handleDateChange = (date) => {
-    setSelectedDate(date)
+  const handleDateChange = (pickDate) => {
+    if (pickDate == null) {
+      setSelectedDate(null)
+    } else {
+      const y = pickDate.getFullYear()
+      const m = ("00" + (pickDate.getMonth()+1)).slice(-2);
+      const d = ("00" + pickDate.getDate()).slice(-2);
+      setSelectedDate(y + "/" + m + "/" + d)
+    }
   }
 
   const classes = useStyles()

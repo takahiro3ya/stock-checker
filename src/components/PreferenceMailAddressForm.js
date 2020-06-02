@@ -2,7 +2,7 @@
  * Material-UI / Modal
  * https://material-ui.com/components/modal/#modal
  */
-import React, { useState, useEffect } from 'react'
+import React, { useContext, useState, useEffect } from 'react'
 import EditIcon from '@material-ui/icons/Edit'
 import Typography from '@material-ui/core/Typography'
 import Grid from '@material-ui/core/Grid'
@@ -14,6 +14,9 @@ import Divider from '@material-ui/core/Divider'
 import Modal from '@material-ui/core/Modal'
 import { makeStyles } from '@material-ui/core/styles'
 import { lightGreen } from '@material-ui/core/colors'
+
+import AppContext from '../contexts/AppContext'
+import { UPDATE_MAIL_ADDRESS } from '../actions'
 
 function getModalStyle() {
   const top = 50
@@ -105,21 +108,31 @@ const useWindowWidth = () => {
 }
 
 const PreferenceMailAddressForm = () => {
+  const { state, dispatch } = useContext(AppContext)
   const classes = useStyles()
-
   // getModalStyle is not a pure function, we roll the style only on the first render
   const [modalStyle] = useState(getModalStyle)
   const [open, setOpen] = useState(false)
-
+  const [mailAddress, setMailAddress] = useState('')
   const { width } = useWindowWidth()
 
   const handleOpen = () => {
     setOpen(true)
   }
   const handleClose = () => {
+    setMailAddress(state.preferences.mailAdress)
     setOpen(false)
   }
+  const handleUpdateMailAddress = e => {
+    e.preventDefault()
 
+    dispatch({
+      type: UPDATE_MAIL_ADDRESS,
+      mailAddress
+    })
+
+    setOpen(false)
+  }
   const body = (
     <div style={modalStyle} className={classes.paper}>
       <Typography variant="h6" style={{ marginBottom: 10 }}>
@@ -130,8 +143,11 @@ const PreferenceMailAddressForm = () => {
         autoFocus={true}
         // required
         fullWidth
+        multiline
+        rowsMax={4}
         id="form-mail-address"
         label="メールアドレス"
+        value={mailAddress}
         // helperText=""
         InputLabelProps={{
           shrink: true,
@@ -140,12 +156,13 @@ const PreferenceMailAddressForm = () => {
         margin="normal"
         variant="outlined"
         className={classes.form}
+        onChange={e => setMailAddress(e.target.value)}
       />
 
       <Button
         variant="contained"
         className={classes.addButton}
-        onClick={handleClose}
+        onClick={handleUpdateMailAddress}
       >
         <strong>変更</strong>
       </Button>
@@ -187,7 +204,8 @@ const PreferenceMailAddressForm = () => {
           className={classes.mailAddress}
           style={{ maxWidth: width - 60 }}
         >
-          xxeafeagrgijojoixxxxx.yyyyyy777asdkjfiqoaewhfgq@yahoo.co.jp
+          {/* アドレスが undefined, '', null の場合は「未登録」と表示 */}
+          {state.preferences.mailAdress || '未登録'}
         </Typography>
       </Grid>
       <Grid item xs={12}>

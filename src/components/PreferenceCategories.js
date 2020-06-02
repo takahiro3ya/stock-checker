@@ -1,10 +1,11 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import Typography from '@material-ui/core/Typography'
 import Paper from '@material-ui/core/Paper'
 import Grid from '@material-ui/core/Grid'
 import LabelImportantIcon from '@material-ui/icons/LabelImportant'
 import { makeStyles } from '@material-ui/core/styles'
 
+import AppContext from '../contexts/AppContext'
 import PreferenceCategoriesForm from './PreferenceCategoriesForm'
 
 const useStyles = makeStyles((theme) => ({
@@ -27,62 +28,9 @@ const useStyles = makeStyles((theme) => ({
   },
 }))
 
-// ./ItemFormのリスト選択でも利用するためexport
-export const categories = [
-  {
-    label: '1',
-    color: '#2196f3',
-    value: 'label 1',
-  },
-  {
-    label: '2',
-    color: '#f44336',
-    value: 'label 2',
-  },
-  {
-    label: '3',
-    color: '#4caf50',
-    value: 'label 3',
-  },
-  {
-    label: '4',
-    color: '#fdd835',
-    value: 'label 4',
-  },
-  {
-    label: '5',
-    color: '#f06292',
-    value: 'label 5',
-  },
-  {
-    label: '6',
-    color: '#8d6e63',
-    value: 'label 6',
-  },
-  {
-    label: '7',
-    color: '#3f51b5',
-    value: 'label 7',
-  },
-  {
-    label: '8',
-    color: '#ff9800',
-    value: 'label 8',
-  },
-  {
-    label: '9',
-    color: '#8bc34a',
-    value: 'あいうえおあいうえおあいうえお', // label 9
-  },
-  {
-    label: '10',
-    color: '#9e9e9e',
-    value: 'label 10',
-  },
-]
-
 const PreferenceCategories = () => {
   const classes = useStyles()
+  const { state } = useContext(AppContext)
 
   return (
     <>
@@ -98,10 +46,10 @@ const PreferenceCategories = () => {
             </Typography>
           </Grid>
           <Grid item xs={4} className={classes.buttonGrid}>
-            <PreferenceCategoriesForm categories={categories} />
+            <PreferenceCategoriesForm />
           </Grid>
-          {categories.map(category => (
-            <Grid item xs={12} key={category.label}>
+          {state.categories.map(category => (
+            <Grid item xs={12} key={category.categoryIndex}>
               <Typography variant="body1" className={classes.textGrid}>
                 <LabelImportantIcon fontSize="small" style={{ color: category.color }} />
                 &ensp;{category.value}

@@ -2,7 +2,7 @@
  * Material-UI / Modal
  * https://material-ui.com/components/modal/#modal
  */
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import Button from '@material-ui/core/Button'
 import Typography from '@material-ui/core/Typography'
 import IconButton from '@material-ui/core/IconButton'
@@ -13,6 +13,9 @@ import TextField from '@material-ui/core/TextField'
 import Modal from '@material-ui/core/Modal'
 import { lightGreen } from '@material-ui/core/colors'
 import { makeStyles } from '@material-ui/core/styles'
+
+import AppContext from '../contexts/AppContext'
+import { UPDATE_CATEGORIES } from '../actions'
 
 function getModalStyle() {
   const top = 50
@@ -68,10 +71,11 @@ const useStyles = makeStyles((theme) => ({
   },
 }))
 
-const PreferenceCategoriesForm = props => {
-  const { categories } = props
+const PreferenceCategoriesForm = () => {
+  const { state, dispatch } = useContext(AppContext)
+  const initialLabelNames = [...state.categories].map(category => category.value)
+  const [labelNames, setLabelNames] = useState(initialLabelNames)
   const classes = useStyles()
-
   // getModalStyle is not a pure function, we roll the style only on the first render
   const [modalStyle] = useState(getModalStyle)
   const [open, setOpen] = useState(false)
@@ -80,6 +84,17 @@ const PreferenceCategoriesForm = props => {
     setOpen(true)
   }
   const handleClose = () => {
+    setLabelNames(initialLabelNames)
+    setOpen(false)
+  }
+  const handleUpdateCategoriesName = e => {
+    e.preventDefault()
+
+    dispatch({
+      type: UPDATE_CATEGORIES,
+      labelNames
+    })
+
     setOpen(false)
   }
 
@@ -89,22 +104,27 @@ const PreferenceCategoriesForm = props => {
         ラベル名の変更
       </Typography>
 
-      {categories.map(category => (
+      {state.categories.map(category => (
         <TextField
           fullWidth
+          multiline
+          rowsMax={3}
           variant="outlined"
-          defaultValue={category.value}
-          key={category.label}
-          id={`label-${category.label}`}
+          value={labelNames[category.categoryIndex]}
+          key={category.categoryIndex}
+          id={`label-${category.categoryIndex}`}
           className={classes.form}
           label={<LabelImportantIcon style={{ color: category.color }} />}
+          onChange={e => setLabelNames(labelNames.map((labelName, index) =>
+            index === Number(category.categoryIndex) ? e.target.value : labelName
+          ))}
         />
       ))}
 
       <Button
         variant="contained"
         className={classes.addButton}
-        onClick={handleClose}
+        onClick={handleUpdateCategoriesName}
       >
         <strong>変更</strong>
       </Button>

@@ -1,15 +1,19 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import IconButton from '@material-ui/core/IconButton'
 import DeleteIcon from '@material-ui/icons/Delete'
 
-const ItemDelete = () => {
-  const handleClickDeleteButton = () => {
-    // if (condition) {
-    //   // メールアドレスが""またはnullの場合、警告。
-    // }
-    const result = window.confirm(`●● を削除しますか？`)
+import AppContext from '../contexts/AppContext'
+import { DELETE_ITEM } from '../actions'
+
+const ItemDelete = ({ item }) => {
+  const { itemId } = item
+  const { dispatch } = useContext(AppContext)
+
+  const handleDeleteItem = e => {
+    e.preventDefault()
+    const result = window.confirm(`「${item.itemName}」を削除しますか？`)
     if (result) {
-      console.log('delete')
+      dispatch({ type: DELETE_ITEM, itemId })
     }
   }
 
@@ -18,7 +22,7 @@ const ItemDelete = () => {
       <IconButton
         aria-label="delete"
         size="small"
-        onClick={handleClickDeleteButton}
+        onClick={handleDeleteItem}
       >
         <DeleteIcon />
       </IconButton>

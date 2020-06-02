@@ -1,22 +1,22 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import Typography from '@material-ui/core/Typography'
 import Grid from '@material-ui/core/Grid'
 import Hidden from '@material-ui/core/Hidden'
 import Divider from '@material-ui/core/Divider'
 import { makeStyles } from '@material-ui/core/styles'
-import IconButton from '@material-ui/core/IconButton'
-import RemoveIcon from '@material-ui/icons/Remove'
-import AddIcon from '@material-ui/icons/Add'
+import LabelImportantIcon from '@material-ui/icons/LabelImportant'
 import { lightGreen, orange } from '@material-ui/core/colors'
 import Fab from '@material-ui/core/Fab'
 import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp'
 import useScrollTrigger from '@material-ui/core/useScrollTrigger'
 import Zoom from '@material-ui/core/Zoom'
 
+import AppContext from '../contexts/AppContext'
 import ItemsSort from './ItemsSort'
 import ItemUpdateForm from './ItemUpdateForm'
 import ItemDelete from './ItemDelete'
 import ItemCreateForm from './ItemCreateForm'
+import ItemStockCount from './ItemStockCount'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -40,9 +40,6 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     justifyContent: 'flex-end', // 右寄せ
     alignItems: 'center',
-  },
-  stockCount: {
-    margin: 5,
   },
   scrollTop: {
     position: 'fixed',
@@ -69,7 +66,7 @@ function ScrollTop(props) {
     threshold: 100, // ボタン表示の開始位置
   })
 
-  const handleClick = (event) => {
+  const handleScrollTop = (event) => {
     const anchor = (event.target.ownerDocument || document).querySelector('#back-to-top-anchor')
 
     if (anchor) {
@@ -79,7 +76,7 @@ function ScrollTop(props) {
 
   return (
     <Zoom in={trigger}>
-      <div onClick={handleClick} role="presentation" className={classes.scrollTop}>
+      <div onClick={handleScrollTop} role="presentation" className={classes.scrollTop}>
         {children}
       </div>
     </Zoom>
@@ -87,6 +84,7 @@ function ScrollTop(props) {
 }
 
 const Items = (props) => {
+  const { state } = useContext(AppContext)
   const classes = useStyles()
 
   return (
@@ -155,6 +153,83 @@ const Items = (props) => {
       </Grid>
 
       {/* Item リスト */}
+      {state.items.map(item => {
+        const { categoryIndex } = item
+        return (
+          <div key={item.itemId}>
+            <Grid container spacing={0}>
+              <Grid item xs={2} sm={1} className={classes.leftButton}>
+                <ItemUpdateForm item={item} />
+              </Grid>
+
+              <Grid item xs={8} sm={6} lg={3} className={classes.root}>
+                <Typography variant="body2" className={classes.root}>
+                  <LabelImportantIcon
+                    fontSize="small"
+                    style={{ color: state.categories[categoryIndex].color }}
+                  />
+                  &ensp;{state.categories[categoryIndex].value}
+                </Typography>
+              </Grid>
+
+              <Hidden only={['xs', 'lg', 'xl']}>
+                <Grid item sm={4} className={classes.root}>
+                  <Typography variant="body2">
+                    {item.selectedDate}
+                  </Typography>
+                </Grid>
+              </Hidden>
+
+              <Hidden lgUp>
+                <Grid item xs={2} sm={1} className={classes.rightButton}>
+                  <ItemDelete item={item} />
+                </Grid>
+              </Hidden>
+
+              {/* 2段表示時の2段目調整のブロック */}
+              <Hidden only={['xs', 'lg', 'xl']}>
+                <Grid item sm={1} className={classes.root}></Grid>
+              </Hidden>
+
+              <Grid item xs={12} sm={6} lg={4} className={classes.root}>
+                <Typography variant="body2">
+                  {item.itemName}
+                </Typography>
+              </Grid>
+
+              <Grid item xs={6} sm={4} lg={2} className={classes.root}>
+                <ItemStockCount item={item} />
+              </Grid>
+
+              <Hidden only={['sm', 'md']}>
+                <Grid item xs={6} lg={1} className={classes.root}>
+                  <Typography variant="body2">
+                    {item.selectedDate}
+                  </Typography>
+                </Grid>
+              </Hidden>
+
+              <Hidden mdDown>
+                <Grid item lg={1} className={classes.rightButton}>
+                  <ItemDelete item={item} />
+                </Grid>
+              </Hidden>
+
+              {/* 2段表示時の2段目調整のブロック */}
+              <Hidden only={['xs', 'lg', 'xl']}>
+                <Grid item sm={1} className={classes.root}></Grid>
+              </Hidden>
+            </Grid>
+            <Divider />
+          </div>
+        )
+      })}
+
+
+
+
+      {/*
+      // Item リスト
       <Grid container spacing={0}>
         <Grid item xs={2} sm={1} className={classes.leftButton}>
           <ItemUpdateForm />
@@ -180,7 +255,7 @@ const Items = (props) => {
           </Grid>
         </Hidden>
 
-        {/* 2段表示時の2段目調整のブロック */}
+        // 2段表示時の2段目調整のブロック
         <Hidden only={['xs', 'lg', 'xl']}>
           <Grid item sm={1} className={classes.root}></Grid>
         </Hidden>
@@ -217,13 +292,17 @@ const Items = (props) => {
           </Grid>
         </Hidden>
 
-        {/* 2段表示時の2段目調整のブロック */}
+        // 2段表示時の2段目調整のブロック
         <Hidden only={['xs', 'lg', 'xl']}>
           <Grid item sm={1} className={classes.root}></Grid>
         </Hidden>
       </Grid>
       <Divider />
+       */}
 
+
+
+{/*
       {[...Array(60).keys()].map(count => {
         return (
           // Item リスト
@@ -249,7 +328,7 @@ const Items = (props) => {
                   <ItemDelete />
                 </Grid>
               </Hidden>
-              {/* 2段表示時の2段目調整のブロック */}
+              // 2段表示時の2段目調整のブロック
               <Hidden only={['xs', 'lg', 'xl']}>
                 <Grid item sm={1} className={classes.root}></Grid>
               </Hidden>
@@ -281,7 +360,7 @@ const Items = (props) => {
                   <ItemDelete />
                 </Grid>
               </Hidden>
-              {/* 2段表示時の2段目調整のブロック */}
+              // 2段表示時の2段目調整のブロック
               <Hidden only={['xs', 'lg', 'xl']}>
                 <Grid item sm={1} className={classes.root}></Grid>
               </Hidden>
@@ -290,6 +369,8 @@ const Items = (props) => {
           </div>
         )
       })}
+ */}
+
 
       {/* 最下部スペース */}
       <div style={{ margin: 60 }}></div>

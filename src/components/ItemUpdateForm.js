@@ -2,7 +2,7 @@
  * Material-UI / Modal
  * https://material-ui.com/components/modal/#modal
  */
-import React, { useState } from 'react'
+import React, { useContext, useState, useEffect } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import Typography from '@material-ui/core/Typography'
 import Modal from '@material-ui/core/Modal'
@@ -16,8 +16,9 @@ import Grid from '@material-ui/core/Grid'
 import MenuItem from '@material-ui/core/MenuItem'
 import lightGreen from '@material-ui/core/colors/lightGreen'
 
+import AppContext from '../contexts/AppContext'
+import { UPDATE_ITEM } from '../actions'
 import ItemFormPickers from './ItemFormPickers'
-import { categories } from './PreferenceCategories'
 
 function getModalStyle() {
   const top = 50
@@ -73,24 +74,54 @@ const useStyles = makeStyles((theme) => ({
   },
 }))
 
-const ItemUpdateForm = () => {
+const ItemUpdateForm = ({ item }) => {
+  const { state, dispatch } = useContext(AppContext)
   const classes = useStyles()
-
   // getModalStyle is not a pure function, we roll the style only on the first render
   const [modalStyle] = useState(getModalStyle)
   const [open, setOpen] = useState(false)
-
-  const [category, setCategory] = useState('')
+  const [categoryIndex, setCategoryIndex] = useState(item.categoryIndex)
+  const [itemName, setItemName] = useState(item.itemName)
+  const [stock, setStock] = useState(item.stock)
+  const [selectedDate, setSelectedDate] = useState(item.selectedDate)
+  const { itemId } = item
 
   const handleOpen = () => {
     setOpen(true)
   }
   const handleClose = () => {
     setOpen(false)
+    setCategoryIndex(item.categoryIndex)
+    setItemName(item.itemName)
+    setStock(item.stock)
+    setSelectedDate(item.selectedDate)
   }
-  const handleChange = (event) => {
-    setCategory(event.target.value)
+  const handleUpdateItem = e => {
+    e.preventDefault()
+
+    dispatch({
+      type: UPDATE_ITEM,
+      itemId,
+      categoryIndex,
+      itemName,
+      stock,
+      selectedDate,
+    })
+
+    setOpen(false)
   }
+
+  /**
+   * ストック数の左右にある[+],[-]アイコンが押されて再描画されると、
+   * 本コンポーネントの stock と item.stock に差異が発生し、
+   * Modalのストック数が正しく更新されない(item.stock は更新されるが、
+   * stock は更新されないため)。
+   * 差異を解消するために、再描画時に item.stock が更新された場合、
+   * useEffect によって setStock を実行し、stock を更新する。
+   */
+  useEffect(() => {
+    setStock(item.stock)
+  }, [item.stock])
 
   const body = (
     <div style={modalStyle} className={classes.paper}>
@@ -117,11 +148,11 @@ const ItemUpdateForm = () => {
             required
             fullWidth
             select
-            value={category}
-            onChange={handleChange}
+            onChange={e => setCategoryIndex(e.target.value)}
             autoComplete="off"
             id="form-category"
             label="ラベル"
+            value={categoryIndex}
             helperText="リストから選択"
             InputLabelProps={{
               shrink: true,
@@ -132,8 +163,8 @@ const ItemUpdateForm = () => {
             className={classes.form}
           >
             {/* ./Preferencesからimportしたcategoriesをmap()で編成 */}
-            {categories.map(category => (
-              <MenuItem key={category.label} value={category.label}>
+            {state.categories.map(category => (
+              <MenuItem key={category.categoryIndex} value={category.categoryIndex}>
                 <div className={classes.formCategory}>
                   <LabelImportantIcon fontSize="small" style={{ color: category.color }} />
                   {category.value}
@@ -148,6 +179,7 @@ const ItemUpdateForm = () => {
             fullWidth
             id="form-item-name"
             label="アイテム名"
+            value={itemName}
             helperText="1〜30文字"
             InputLabelProps={{
               shrink: true,
@@ -156,6 +188,7 @@ const ItemUpdateForm = () => {
             margin="normal"
             variant="outlined"
             className={classes.form}
+            onChange={e => setItemName(e.target.value)}
           />
         </Grid>
         <Grid item xs={12} sm={6}>
@@ -166,6 +199,7 @@ const ItemUpdateForm = () => {
             type="number"
             style={{ marginRight: 8 }}
             label="ストック数"
+            value={stock}
             helperText="0〜99999（整数）"
             InputLabelProps={{
               shrink: true,
@@ -174,18 +208,19 @@ const ItemUpdateForm = () => {
             margin="normal"
             variant="outlined"
             className={classes.form}
+            onChange={e => setStock(e.target.value)}
           />
         </Grid>
         <Grid item xs={12} sm={6}>
           {/* 期限を入力するためのコンポーネント */}
-          <ItemFormPickers />
+          <ItemFormPickers selectedDate={selectedDate} setSelectedDate={setSelectedDate} />
         </Grid>
       </Grid>
 
       <Button
         variant="contained"
         className={classes.updateButton}
-        onClick={handleClose}
+        onClick={handleUpdateItem}
       >
         <strong>変更</strong>
       </Button>
