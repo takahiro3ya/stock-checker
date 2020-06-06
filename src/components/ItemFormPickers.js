@@ -63,7 +63,6 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 const ItemFormPickers = ({ selectedDate, setSelectedDate }) => {
-  // The first commit of Material-UI
   // const [selectedDate, setSelectedDate] = useState(null) // 親からpropsとして受け取る。
 
   const handleDateChange = (pickDate) => {
@@ -79,6 +78,11 @@ const ItemFormPickers = ({ selectedDate, setSelectedDate }) => {
 
   const classes = useStyles()
 
+  const handlePickerHlpTxt = new Date(selectedDate)
+    .toString() === 'Invalid Date' ?
+    '例: 2021/01/01　Hint: 例と同じ形式で入力してください。' :
+    '例: 2021/01/01'
+
   return (
     // 日本語のlocaleおよびカスタマイズしたutilsを設定
     <MuiPickersUtilsProvider utils={ExtendedUtils} locale={jaLocale}>
@@ -90,7 +94,7 @@ const ItemFormPickers = ({ selectedDate, setSelectedDate }) => {
           margin="normal"
           id="date-picker-dialog"
           label="期限"
-          helperText="例: 2021/01/01"
+          helperText={handlePickerHlpTxt}
           format="yyyy/MM/dd"
           value={selectedDate}
           InputLabelProps={{

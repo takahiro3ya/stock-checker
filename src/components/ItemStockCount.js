@@ -38,13 +38,23 @@ const ItemStockCount = ({ item }) => {
 
   return (
     <>
-      <IconButton aria-label="plus" size="small" onClick={handleStockPlus}>
+      <IconButton
+        aria-label="plus"
+        size="small"
+        onClick={handleStockPlus}
+        disabled={stock === '99999' || false}
+      >
         <AddIcon />
       </IconButton>
       <Typography variant="body2" style={{ margin: 6 }}>
         {stock}
       </Typography>
-      <IconButton aria-label="minus" size="small" onClick={handleStockMinus}>
+      <IconButton
+        aria-label="minus"
+        size="small"
+        onClick={handleStockMinus}
+        disabled={stock === '0' || false}
+      >
         <RemoveIcon />
       </IconButton>
     </>

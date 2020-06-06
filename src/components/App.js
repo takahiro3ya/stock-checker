@@ -40,7 +40,14 @@ const App = () => {
   const [state, dispatch] = useReducer(reducer, {
     items: [],
     categories: initialCategories,
-    preferences: {mailAdress: null, autoMail: false}
+    /**
+     * mailAdressプロパティは、nullやundefinedだとエラーとなるため''を設定。
+     * 使用するPreferenceMailAddressForm.jsにおいて、<textarea>(multilineの
+     * <TextField>)で表示する際、nullだとWarningが発生。
+     * また、同ファイルにおけるvalidationでmatch()を実行する際、nullやundefinedは
+     * TypeErrorとなる。
+     */
+    preferences: {mailAdress: '', autoMail: false}
   })
   // // stateが変更されるたび、localStorageにstateを保存する。
   // useEffect(() => {

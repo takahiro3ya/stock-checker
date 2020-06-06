@@ -51,7 +51,7 @@ const useStyles = makeStyles((theme) => ({
     position: 'absolute',
     width: '90%',
     maxWidth: 660,
-    maxHeight: '90%', // 画面サイズが小さくてもはみ出ないよう設定
+    maxHeight: '85%', // 画面サイズが小さくてもはみ出ないよう設定
     backgroundColor: theme.palette.background.paper,
     border: '1px solid #cecece',
     boxShadow: theme.shadows[5],
@@ -116,6 +116,16 @@ const PreferenceMailAddressForm = () => {
   const [mailAddress, setMailAddress] = useState('')
   const { width } = useWindowWidth()
 
+  // メールアドレスformは、未入力またはメールアドレス形式の文字列のみ変更ボタンを有効化
+  const reMailAddress = /^[\w.!#$%&'*+/=?^`{|}~-]+@\w+([-.]\w+)*\.\w+([-.]\w+)*$/
+  const updateBtnDisabled = mailAddress === '' ? false :
+    mailAddress.match(reMailAddress) === null || mailAddress.length > 256
+  const formMailAddressHlpTxt = updateBtnDisabled ?
+    mailAddress.length > 256 ?
+      '最大256文字　Hint: 文字数の上限を超えています。' :
+      '最大256文字　Hint: 未入力時、または正しい形式のメールアドレス入力時に変更ボタンが有効になります。' :
+    '最大256文字'
+
   const handleOpen = () => {
     setOpen(true)
   }
@@ -147,8 +157,11 @@ const PreferenceMailAddressForm = () => {
         rowsMax={4}
         id="form-mail-address"
         label="メールアドレス"
+        type="email"
         value={mailAddress}
-        // helperText=""
+        onChange={e => setMailAddress(e.target.value)}
+        helperText={formMailAddressHlpTxt}
+        error={updateBtnDisabled}
         InputLabelProps={{
           shrink: true,
           style: { color: '#595959' },
@@ -156,13 +169,13 @@ const PreferenceMailAddressForm = () => {
         margin="normal"
         variant="outlined"
         className={classes.form}
-        onChange={e => setMailAddress(e.target.value)}
       />
 
       <Button
         variant="contained"
         className={classes.addButton}
         onClick={handleUpdateMailAddress}
+        disabled={updateBtnDisabled}
       >
         <strong>変更</strong>
       </Button>

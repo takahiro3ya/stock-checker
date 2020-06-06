@@ -19,7 +19,8 @@ const useStyles = makeStyles((theme) => ({
   textGrid: {
     display: 'flex', // flex boxにより下記の配置を有効化
     alignItems: 'center',     // 上下中央揃え
-    textAlign: 'center', // 複数行になる場合、2行目以降も中央揃えにする。
+    marginBottom: 8,
+    textAlign: 'flex-start'
   },
   buttonGrid: {
     display: 'flex',

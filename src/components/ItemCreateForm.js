@@ -36,7 +36,7 @@ const useStyles = makeStyles((theme) => ({
   paper: {
     position: 'absolute',
     width: '90%',
-    maxHeight: '90%', // 画面サイズが小さくてもはみ出ないよう設定
+    maxHeight: '85%', // 画面サイズが小さくてもはみ出ないよう設定
     backgroundColor: theme.palette.background.paper,
     border: '1px solid #cecece',
     boxShadow: theme.shadows[5],
@@ -96,7 +96,27 @@ const ItemCreateForm = () => {
   const [stock, setStock] = useState('')
   const [selectedDate, setSelectedDate] = useState(null)
 
+  // error propのtypeはBooleanなので、functionだとエラーになるので注意。
+  const formCategoryError = Boolean(!categoryIndex)
+  const formItemNameError = Boolean(!itemName) || itemName.length > 30
+  const formStockError = Boolean(!stock) || stock < 0 || stock > 99999 ||
+    !Number.isInteger(Number(stock)) // 小数ならtrue
+  const formItemNameHlpTxt = itemName.length > 30 ?
+    '1〜30文字　Hint: 30文字以内で入力してください。' :
+    '1〜30文字'
+  const formStockHlpTxt =  stock < 0 || stock > 99999 ||
+    !Number.isInteger(Number(stock)) ?
+    '0〜99999（整数）　Hint: 範囲内の整数を入力してください。' :
+    '0〜99999（整数）'
+  const createBtnDisabled = formCategoryError || formItemNameError
+    || formStockError || new Date(selectedDate).toString() === 'Invalid Date'
+
   const handleOpen = () => {
+    // フォームの値をクリア
+    setCategoryIndex('')
+    setItemName('')
+    setStock('')
+    setSelectedDate(null)
     setOpen(true)
   }
   const handleClose = () => {
@@ -104,7 +124,7 @@ const ItemCreateForm = () => {
   }
   const handleCreateItem = e => {
     e.preventDefault()
-
+    console.log('form: ' + selectedDate)
     dispatch({
       type: CREATE_ITEM,
       categoryIndex,
@@ -142,25 +162,28 @@ const ItemCreateForm = () => {
         <Grid item xs={12} sm={6}>
           {/* リストから選択 */}
           <TextField
-            autoFocus={true}
+            // autoFocus={true} // 必須項目の視認性を優先してコメントアウト
+            // multiline   // 認識しない(selectリストのため?)
+            // rowsMax={2} // 認識しない(selectリストのため?)
             required
             fullWidth
             select
-            value={categoryIndex}
-            onChange={e => setCategoryIndex(e.target.value)}
             autoComplete="off"
             id="form-category"
             label="ラベル"
+            value={categoryIndex}
+            onChange={e => setCategoryIndex(e.target.value)}
             helperText="リストから選択"
+            error={formCategoryError}
             InputLabelProps={{
               shrink: true,
-              style: { color: 'red' },
+              // style: { color: 'red' },
             }}
             margin="normal"
             variant="outlined"
             className={classes.form}
           >
-            {/* ./Preferencesからimportしたcategoriesをmap()で編成 */}
+            {/* 選択リストをmap()で編成 */}
             {state.categories.map(category => (
               <MenuItem key={category.categoryIndex} value={category.categoryIndex}>
                 <div className={classes.formCategory}>
@@ -175,17 +198,21 @@ const ItemCreateForm = () => {
           <TextField
             required
             fullWidth
+            multiline
+            rowsMax={3}
             id="form-item-name"
             label="アイテム名"
-            helperText="1〜30文字"
+            value={itemName}
+            onChange={e => setItemName(e.target.value)}
+            helperText={formItemNameHlpTxt}
+            error={formItemNameError}
             InputLabelProps={{
               shrink: true,
-              style: { color: 'red' },
+              // style: { color: 'red' },
             }}
             margin="normal"
             variant="outlined"
             className={classes.form}
-            onChange={e => setItemName(e.target.value)}
           />
         </Grid>
         <Grid item xs={12} sm={6}>
@@ -194,17 +221,19 @@ const ItemCreateForm = () => {
             fullWidth
             id="form-stock"
             type="number"
-            style={{ marginRight: 8 }}
             label="ストック数"
-            helperText="0〜99999（整数）"
+            value={stock}
+            onChange={e => setStock(e.target.value)}
+            helperText={formStockHlpTxt}
+            error={formStockError}
+            style={{ marginRight: 8 }}
             InputLabelProps={{
               shrink: true,
-              style: { color: 'red' },
+              // style: { color: 'red' },
             }}
             margin="normal"
             variant="outlined"
             className={classes.form}
-            onChange={e => setStock(e.target.value)}
           />
         </Grid>
         <Grid item xs={12} sm={6}>
@@ -217,6 +246,7 @@ const ItemCreateForm = () => {
         variant="contained"
         className={classes.createButton}
         onClick={handleCreateItem}
+        disabled={createBtnDisabled}
       >
         <strong>追加</strong>
       </Button>
