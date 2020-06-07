@@ -4,6 +4,7 @@ import {
   Switch,
   Route
 } from 'react-router-dom'
+import _ from 'lodash'
 
 // combineReducersをreducerとしてimport
 import reducer from '../reducers'
@@ -14,8 +15,8 @@ import Preferences from './Preferences'
 import Manual from './Manual'
 import categoriesJson from './resources/categories.json'
 
-const APP_KEY = 'StockCheckerKey078SDU84S1'
-const { categories: defaultCategories } = categoriesJson
+export const APP_KEY = 'StockCheckerKey078SDU84S1'
+export const { categories: defaultCategories } = categoriesJson
 const defaultState = {
   items: [],
   categories: defaultCategories,
@@ -44,15 +45,18 @@ const App = () => {
   const [state, dispatch] = useReducer(reducer, initialState)
 
   useEffect(() => {
-    // 初回を除き、stateが変更されるたびlocalStorageにstateを保存する。
-    if (state !== defaultState)
-      // JSON.stringify()
-      // 引数に渡したJSオブジェクトをJSON形式の文字列に変換
-      localStorage.setItem(APP_KEY, JSON.stringify(state))
+    /**
+     * オブジェクトの比較のため、データ内容が一致しても===ではtrueにならない。
+     * よってLodashのisEqual()でチェック。
+     * https://lodash.com/docs#isEqual
+     */
+    // stateがdefaultの場合を除き、stateが変更されるたびlocalStorageにstateを保存する。
+    if (!_.isEqual(state, defaultState)) {
+        // JSON.stringify()
+        // 引数に渡したJSオブジェクトをJSON形式の文字列に変換
+        localStorage.setItem(APP_KEY, JSON.stringify(state))
+      }
   }, [state])
-
-console.log('▼App')
-console.log(state)
 
   return (
     <AppContext.Provider value={{ state, dispatch }}>

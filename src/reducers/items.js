@@ -9,7 +9,8 @@ import {
   SORT_ITEMS_WITH_STOCK_FEW,
   SORT_ITEMS_WITH_STOCK_MANY,
   SORT_ITEMS_WITH_DEADLINE_SHORT,
-  SORT_ITEMS_WITH_DEADLINE_LONG
+  SORT_ITEMS_WITH_DEADLINE_LONG,
+  DELETE_ALL_ITEMS
 } from '../actions'
 import { generateUuid } from '../utils'
 
@@ -114,6 +115,8 @@ const items = (state = [], action) => {
           +(a.selectedDate < b.selectedDate)
         )
       })
+    case DELETE_ALL_ITEMS:
+      return []
 
     default:
       return state

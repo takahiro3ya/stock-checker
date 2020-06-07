@@ -1,7 +1,7 @@
 // import { UPDATE_MAIL_ADDRESS, AUTO_MAIL } from '../actions'
-import { UPDATE_MAIL_ADDRESS } from '../actions'
+import { UPDATE_MAIL_ADDRESS, DELETE_MAIL_ADDRESS } from '../actions'
 
-const preferences = (state = [], action) => {
+const preferences = (state = {}, action) => {
   switch (action.type) {
     case UPDATE_MAIL_ADDRESS:
       return Boolean(action.mailAddress) ?
@@ -12,6 +12,8 @@ const preferences = (state = [], action) => {
     case AUTO_MAIL:
       return {...state, autoMail: action.autoMail}
      */
+    case DELETE_MAIL_ADDRESS:
+      return {mailAdress: '', autoMail: false}
     default:
       return state
   }

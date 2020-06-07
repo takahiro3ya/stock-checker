@@ -1,4 +1,6 @@
-import { UPDATE_CATEGORIES } from '../actions'
+import { UPDATE_CATEGORIES, DELETE_ALL_CATEGORIES } from '../actions'
+
+import { defaultCategories } from '../components/App'
 
 const categories = (state = [], action) => {
   switch (action.type) {
@@ -7,6 +9,8 @@ const categories = (state = [], action) => {
         category.value = action.labelNames[index]
         return category
       })
+    case DELETE_ALL_CATEGORIES:
+      return defaultCategories
     default:
       return state
   }

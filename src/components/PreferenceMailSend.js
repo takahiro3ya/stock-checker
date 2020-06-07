@@ -14,7 +14,6 @@ import { lightGreen } from '@material-ui/core/colors'
 import AppContext from '../contexts/AppContext'
 // import { AUTO_MAIL } from '../actions'
 
-
 const useStyles = makeStyles((theme) => ({
   textGrid: {
     display: 'flex', // flex boxにより下記の配置を有効化
