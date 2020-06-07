@@ -13,20 +13,25 @@ import Items from './Items'
 import Preferences from './Preferences'
 import Manual from './Manual'
 import categoriesJson from './resources/categories.json'
-// ▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼
-// ▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼DB構築後に削除(localStorage)
-const APP_KEY = 'appStockChecker'
-// ▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲DB構築後に削除(localStorage)
-// ▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲
+
+const APP_KEY = 'StockCheckerKey078SDU84S1'
+const { categories: defaultCategories } = categoriesJson
+const defaultState = {
+  items: [],
+  categories: defaultCategories,
+  /**
+   * mailAdressプロパティは、nullやundefinedだとエラーとなるため''を設定。
+   * 使用するPreferenceMailAddressForm.jsにおいて、<textarea>(multilineの
+   * <TextField>)で表示する際、nullだとWarningが発生。
+   * また、同ファイルにおけるvalidationでmatch()を実行する際、nullやundefinedは
+   * TypeErrorとなる。
+   */
+  preferences: {mailAdress: '', autoMail: false}
+}
 
 const App = () => {
-  // ▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼
-  // ▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼DB構築後に削除(localStorage)
-  const { categories: initialCategories } = categoriesJson
   const appState = localStorage.getItem(APP_KEY)
-  const initialState = appState ? JSON.parse(appState) : {
-    items: []
-  }
+  const initialState = appState ? JSON.parse(appState) : defaultState
   /*
   useReducer(reducer, initialArg[, init])
   ++++----------------
@@ -36,30 +41,15 @@ const App = () => {
   return    [state, dispatch]
   ----------------++++
    */
-  // const [state, dispatch] = useReducer(reducer, initialState)
-  const [state, dispatch] = useReducer(reducer, {
-    items: [],
-    categories: initialCategories,
-    /**
-     * mailAdressプロパティは、nullやundefinedだとエラーとなるため''を設定。
-     * 使用するPreferenceMailAddressForm.jsにおいて、<textarea>(multilineの
-     * <TextField>)で表示する際、nullだとWarningが発生。
-     * また、同ファイルにおけるvalidationでmatch()を実行する際、nullやundefinedは
-     * TypeErrorとなる。
-     */
-    preferences: {mailAdress: '', autoMail: false}
-  })
-  // // stateが変更されるたび、localStorageにstateを保存する。
-  // useEffect(() => {
-  //   /**
-  //    * JSON.stringify()
-  //    * 引数に渡したJSオブジェクトを、JSON形式の文字列に変換する。
-  //    */
-  //   // console.log(JSON.stringify(state))
-  //   localStorage.setItem(APP_KEY, JSON.stringify(state))
-  // }, [state])
-  // ▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲DB構築後に削除(localStorage)
-  // ▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲
+  const [state, dispatch] = useReducer(reducer, initialState)
+
+  useEffect(() => {
+    // 初回を除き、stateが変更されるたびlocalStorageにstateを保存する。
+    if (state !== defaultState)
+      // JSON.stringify()
+      // 引数に渡したJSオブジェクトをJSON形式の文字列に変換
+      localStorage.setItem(APP_KEY, JSON.stringify(state))
+  }, [state])
 
 console.log('▼App')
 console.log(state)

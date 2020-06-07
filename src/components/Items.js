@@ -17,6 +17,7 @@ import ItemUpdateForm from './ItemUpdateForm'
 import ItemDelete from './ItemDelete'
 import ItemCreateForm from './ItemCreateForm'
 import ItemStockCount from './ItemStockCount'
+import bigLogo from './images/big-logo-Stock-Checker.png'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -51,6 +52,27 @@ const useStyles = makeStyles((theme) => ({
     '&:hover': {
       backgroundColor: orange[800],
     }
+  },
+  noItemBlock: {
+    textAlign: 'center'
+  },
+  bigLogo: {
+    width: 100,
+    margin: '30px 0 0',
+  },
+  pleaseInfo: {
+    color: lightGreen[500],
+    fontWeight: 'bolder',
+    marginBottom: 30,
+  },
+  noItemInfoBlock: {
+    maxWidth: 380,
+    display: 'inline-block',
+    textAlign: 'left', // noItemBlockの'center'を取り消し
+  },
+  noItemInfo: {
+    color: lightGreen[500],
+    fontWeight: 'bolder',
   }
 }))
 
@@ -153,77 +175,111 @@ const Items = (props) => {
       </Grid>
 
       {/* Item リスト */}
-      {state.items.map(item => {
-        const { categoryIndex } = item
-        return (
-          <div key={item.itemId}>
-            <Grid container spacing={0}>
-              <Grid item xs={2} sm={1} className={classes.leftButton}>
-                <ItemUpdateForm item={item} />
-              </Grid>
-
-              <Grid item xs={8} sm={6} lg={3} className={classes.root}>
-                <Typography variant="body2" className={classes.root}>
-                  <LabelImportantIcon
-                    fontSize="small"
-                    style={{ color: state.categories[categoryIndex].color }}
-                  />
-                  &ensp;{state.categories[categoryIndex].value}
+      {state.items.length === 0
+        ?
+          <>
+            <div className={classes.noItemBlock}>
+              <img
+                src={bigLogo}
+                alt="Big Logo Stock Checker"
+                className={classes.bigLogo}
+              />
+              <Typography
+                variant="subtitle1"
+                className={classes.pleaseInfo}
+                style={{ }}
+              >
+                Please stock your items!
+              </Typography>
+              <div className={classes.noItemInfoBlock}>
+                <Typography
+                  variant="body1"
+                  className={classes.noItemInfo}
+                >
+                  右下の「+」ボタンからアイテムを追加できます。
                 </Typography>
-              </Grid>
-
-              <Hidden only={['xs', 'lg', 'xl']}>
-                <Grid item sm={4} className={classes.root}>
-                  <Typography variant="body2">
-                    {item.selectedDate}
-                  </Typography>
-                </Grid>
-              </Hidden>
-
-              <Hidden lgUp>
-                <Grid item xs={2} sm={1} className={classes.rightButton}>
-                  <ItemDelete item={item} />
-                </Grid>
-              </Hidden>
-
-              {/* 2段表示時の2段目調整のブロック */}
-              <Hidden only={['xs', 'lg', 'xl']}>
-                <Grid item sm={1} className={classes.root}></Grid>
-              </Hidden>
-
-              <Grid item xs={12} sm={6} lg={4} className={classes.root}>
-                <Typography variant="body2">
-                  {item.itemName}
+                <Typography
+                  variant="body1"
+                  className={classes.noItemInfo}
+                >
+                  その他の詳しい操作は、メニューの「マニュアル」をご覧ください。
                 </Typography>
-              </Grid>
+              </div>
+            </div>
+          </>
+        :
+          state.items.map(item => {
+            const { categoryIndex } = item
+            return (
+              <div key={item.itemId}>
+                <Grid container spacing={0}>
+                  <Grid item xs={2} sm={1} className={classes.leftButton}>
+                    <ItemUpdateForm item={item} />
+                  </Grid>
 
-              <Grid item xs={6} sm={4} lg={2} className={classes.root}>
-                <ItemStockCount item={item} />
-              </Grid>
+                  <Grid item xs={8} sm={6} lg={3} className={classes.root}>
+                    <Typography variant="body2" className={classes.root}>
+                      <LabelImportantIcon
+                        fontSize="small"
+                        style={{ color: state.categories[categoryIndex].color }}
+                      />
+                      &ensp;{state.categories[categoryIndex].value}
+                    </Typography>
+                  </Grid>
 
-              <Hidden only={['sm', 'md']}>
-                <Grid item xs={6} lg={1} className={classes.root}>
-                  <Typography variant="body2">
-                    {item.selectedDate}
-                  </Typography>
+                  <Hidden only={['xs', 'lg', 'xl']}>
+                    <Grid item sm={4} className={classes.root}>
+                      <Typography variant="body2">
+                        {item.selectedDate}
+                      </Typography>
+                    </Grid>
+                  </Hidden>
+
+                  <Hidden lgUp>
+                    <Grid item xs={2} sm={1} className={classes.rightButton}>
+                      <ItemDelete item={item} />
+                    </Grid>
+                  </Hidden>
+
+                  {/* 2段表示時の2段目調整のブロック */}
+                  <Hidden only={['xs', 'lg', 'xl']}>
+                    <Grid item sm={1} className={classes.root}></Grid>
+                  </Hidden>
+
+                  <Grid item xs={12} sm={6} lg={4} className={classes.root}>
+                    <Typography variant="body2">
+                      {item.itemName}
+                    </Typography>
+                  </Grid>
+
+                  <Grid item xs={6} sm={4} lg={2} className={classes.root}>
+                    <ItemStockCount item={item} />
+                  </Grid>
+
+                  <Hidden only={['sm', 'md']}>
+                    <Grid item xs={6} lg={1} className={classes.root}>
+                      <Typography variant="body2">
+                        {item.selectedDate}
+                      </Typography>
+                    </Grid>
+                  </Hidden>
+
+                  <Hidden mdDown>
+                    <Grid item lg={1} className={classes.rightButton}>
+                      <ItemDelete item={item} />
+                    </Grid>
+                  </Hidden>
+
+                  {/* 2段表示時の2段目調整のブロック */}
+                  <Hidden only={['xs', 'lg', 'xl']}>
+                    <Grid item sm={1} className={classes.root}></Grid>
+                  </Hidden>
                 </Grid>
-              </Hidden>
-
-              <Hidden mdDown>
-                <Grid item lg={1} className={classes.rightButton}>
-                  <ItemDelete item={item} />
-                </Grid>
-              </Hidden>
-
-              {/* 2段表示時の2段目調整のブロック */}
-              <Hidden only={['xs', 'lg', 'xl']}>
-                <Grid item sm={1} className={classes.root}></Grid>
-              </Hidden>
-            </Grid>
-            <Divider />
-          </div>
-        )
-      })}
+                <Divider />
+              </div>
+            )
+          })
+      }
 
       {/* 最下部スペース */}
       <div style={{ margin: 60 }}></div>
