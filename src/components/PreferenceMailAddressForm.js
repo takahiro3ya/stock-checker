@@ -113,7 +113,7 @@ const PreferenceMailAddressForm = () => {
   // getModalStyle is not a pure function, we roll the style only on the first render
   const [modalStyle] = useState(getModalStyle)
   const [open, setOpen] = useState(false)
-  const [mailAddress, setMailAddress] = useState('')
+  const [mailAddress, setMailAddress] = useState(state.preferences.mailAddress)
   const { width } = useWindowWidth()
 
   // メールアドレスformは、未入力またはメールアドレス形式の文字列のみ変更ボタンを有効化
@@ -130,7 +130,7 @@ const PreferenceMailAddressForm = () => {
     setOpen(true)
   }
   const handleClose = () => {
-    setMailAddress(state.preferences.mailAdress)
+    setMailAddress(state.preferences.mailAddress)
     setOpen(false)
   }
   const handleUpdateMailAddress = e => {
@@ -218,7 +218,7 @@ const PreferenceMailAddressForm = () => {
           style={{ maxWidth: width - 60 }}
         >
           {/* アドレスが undefined, '', null の場合は「未登録」と表示 */}
-          {state.preferences.mailAdress || '未登録'}
+          {state.preferences.mailAddress || '未登録'}
         </Typography>
       </Grid>
       <Grid item xs={12}>

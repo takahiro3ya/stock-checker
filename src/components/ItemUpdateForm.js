@@ -123,6 +123,7 @@ const ItemUpdateForm = ({ item }) => {
       selectedDate,
     })
 
+    setStock(String(Number(stock))) // '005'など、頭に0が付与されるのを抑止。
     setOpen(false)
   }
 

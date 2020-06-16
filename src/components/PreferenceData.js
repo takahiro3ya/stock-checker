@@ -8,7 +8,6 @@ import { makeStyles } from '@material-ui/core/styles'
 import { lightGreen } from '@material-ui/core/colors'
 
 import AppContext from '../contexts/AppContext'
-import { APP_KEY } from './App'
 import {
   DELETE_ALL_ITEMS,
   DELETE_ALL_CATEGORIES,
@@ -53,11 +52,10 @@ const PreferenceData = () => {
     if (result1) {
       const result2 = window.confirm(`最終確認です。本当にすべてのデータを削除しますか？`)
       if (result2) {
-        console.log('All Delete')
-        localStorage.removeItem(APP_KEY)
         dispatch({ type: DELETE_ALL_ITEMS })
         dispatch({ type: DELETE_ALL_CATEGORIES })
         dispatch({ type: DELETE_MAIL_ADDRESS })
+        alert('削除しました。')
       }
     }
   }

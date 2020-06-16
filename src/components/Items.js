@@ -115,7 +115,9 @@ const Items = (props) => {
       {/* Item ヘッダー */}
       {/* Item リストのブロック数と一致するよう、値なしのブロックを配置。 */}
       <Grid container spacing={0} className={classes.itemHead}>
-        <Grid item xs={2} sm={1} className={classes.leftButton}></Grid>
+        <Grid item xs={2} sm={1} className={classes.leftButton}>
+          <ItemsSort />
+        </Grid>
 
         <Grid item xs={8} sm={6} lg={3} className={classes.root}>
           <Typography variant="body2">
@@ -132,9 +134,7 @@ const Items = (props) => {
         </Hidden>
 
         <Hidden lgUp>
-          <Grid item xs={2} sm={1} className={classes.rightButton}>
-            <ItemsSort />
-          </Grid>
+          <Grid item xs={2} sm={1} className={classes.rightButton}></Grid>
         </Hidden>
 
         {/* 2段表示時の2段目調整のブロック */}
@@ -163,9 +163,7 @@ const Items = (props) => {
         </Hidden>
 
         <Hidden mdDown>
-          <Grid item lg={1} className={classes.rightButton}>
-            <ItemsSort />
-          </Grid>
+          <Grid item lg={1} className={classes.rightButton}></Grid>
         </Hidden>
 
         {/* 2段表示時の2段目調整のブロック */}
@@ -189,7 +187,7 @@ const Items = (props) => {
                 className={classes.pleaseInfo}
                 style={{ }}
               >
-                Please stock your items!
+                Please manage your stock!
               </Typography>
               <div className={classes.noItemInfoBlock}>
                 <Typography
@@ -223,7 +221,7 @@ const Items = (props) => {
                         fontSize="small"
                         style={{ color: state.categories[categoryIndex].color }}
                       />
-                      &ensp;{state.categories[categoryIndex].value}
+                      {state.categories[categoryIndex].value}
                     </Typography>
                   </Grid>
 

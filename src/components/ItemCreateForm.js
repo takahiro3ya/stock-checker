@@ -124,7 +124,6 @@ const ItemCreateForm = () => {
   }
   const handleCreateItem = e => {
     e.preventDefault()
-    console.log('form: ' + selectedDate)
     dispatch({
       type: CREATE_ITEM,
       categoryIndex,

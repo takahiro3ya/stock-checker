@@ -3,6 +3,8 @@ import { UPDATE_CATEGORIES, DELETE_ALL_CATEGORIES } from '../actions'
 import { defaultCategories } from '../components/App'
 
 const categories = (state = [], action) => {
+  // console.log('reducer initialCategories')
+  // console.log(initialCategories)
   switch (action.type) {
     case UPDATE_CATEGORIES:
       return state.map((category, index) => {
@@ -10,6 +12,7 @@ const categories = (state = [], action) => {
         return category
       })
     case DELETE_ALL_CATEGORIES:
+      // return defaultCategories
       return defaultCategories
     default:
       return state

@@ -13,26 +13,34 @@ import ResponsiveDrawer from './ResponsiveDrawer'
 import Items from './Items'
 import Preferences from './Preferences'
 import Manual from './Manual'
+// json-loaderのインストールによって下記形式でJSONをimport可能
 import categoriesJson from './resources/categories.json'
 
 export const APP_KEY = 'StockCheckerKey078SDU84S1'
-export const { categories: defaultCategories } = categoriesJson
+export const { defaultCategories } = categoriesJson
 const defaultState = {
   items: [],
   categories: defaultCategories,
   /**
-   * mailAdressプロパティは、nullやundefinedだとエラーとなるため''を設定。
+   * mailAddressプロパティは、nullやundefinedだとエラーとなるため''を設定。
    * 使用するPreferenceMailAddressForm.jsにおいて、<textarea>(multilineの
    * <TextField>)で表示する際、nullだとWarningが発生。
    * また、同ファイルにおけるvalidationでmatch()を実行する際、nullやundefinedは
    * TypeErrorとなる。
    */
-  preferences: {mailAdress: '', autoMail: false}
+  preferences: {mailAddress: '', autoMail: false}
 }
+/**
+ * reducerがdefaultCategoriesに干渉しないようにするため、
+ * スプレッド構文などのシャローコピーではなく、
+ * lodashのcloneDeep()によるディープコピーを作成。
+ * https://lodash.com/docs/4.17.15#cloneDeep
+ */
+const defaultStateDeepCp = _.cloneDeep(defaultState)
+const appState = localStorage.getItem(APP_KEY)
+const initialState = appState ? JSON.parse(appState) : defaultStateDeepCp
 
 const App = () => {
-  const appState = localStorage.getItem(APP_KEY)
-  const initialState = appState ? JSON.parse(appState) : defaultState
   /*
   useReducer(reducer, initialArg[, init])
   ++++----------------
@@ -42,7 +50,9 @@ const App = () => {
   return    [state, dispatch]
   ----------------++++
    */
-  const [state, dispatch] = useReducer(reducer, initialState)
+  const [state, dispatch] = useReducer(reducer, {...initialState})
+  // console.log('state')
+  // console.log(state)
 
   useEffect(() => {
     /**
@@ -50,12 +60,15 @@ const App = () => {
      * よってLodashのisEqual()でチェック。
      * https://lodash.com/docs#isEqual
      */
-    // stateがdefaultの場合を除き、stateが変更されるたびlocalStorageにstateを保存する。
-    if (!_.isEqual(state, defaultState)) {
-        // JSON.stringify()
-        // 引数に渡したJSオブジェクトをJSON形式の文字列に変換
-        localStorage.setItem(APP_KEY, JSON.stringify(state))
-      }
+    if (_.isEqual(state, defaultState)) {
+      // stateがdefaultStateと等しい場合、localStorageを削除。
+      localStorage.removeItem(APP_KEY)
+    } else {
+      // stateがdefaultStateと等しくなければ、localStorageに保存。
+      // JSON.stringify()
+      // 引数に渡したJSオブジェクトをJSON形式の文字列に変換
+      localStorage.setItem(APP_KEY, JSON.stringify(state))
+    }
   }, [state])
 
   return (

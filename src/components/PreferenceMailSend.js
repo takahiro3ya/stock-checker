@@ -19,6 +19,7 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex', // flex boxにより下記の配置を有効化
     alignItems: 'center',     // 上下中央揃え
     // textAlign: 'center', // 複数行になる場合、2行目以降も中央揃えにする。
+    marginTop: 8 // ボタンとの高さ調整
   },
   buttonGrid: {
     display: 'flex',
@@ -57,14 +58,15 @@ const PreferenceMailSend = () => {
   // const { state, dispatch } = useContext(AppContext)
   const { state } = useContext(AppContext)
   const classes = useStyles()
-  const noMailAddress = Boolean(!state.preferences.mailAdress)
+  const noMailAddress = Boolean(!state.preferences.mailAddress)
   // const [autoMailChecked, setAutoMailChecked] = useState(state.preferences.autoMail)
 
   const handleSendMail = e => {
     e.preventDefault()
 
-    const result = window.confirm(`「${state.preferences.mailAdress}」宛にメールを送信しますか？`)
+    const result = window.confirm(`「${state.preferences.mailAddress}」宛にメールを送信しますか？`)
     if (result) {
+      alert('送信しました。')
       console.log('send')
     }
   }
@@ -83,10 +85,10 @@ const PreferenceMailSend = () => {
 
   // メールアドレスが未入力に変更されたらスイッチをoffにする。
   useEffect(() => {
-    if (!state.preferences.mailAdress) {
+    if (!state.preferences.mailAddress) {
       setAutoMailChecked(false)
     }
-  }, [state.preferences.mailAdress])
+  }, [state.preferences.mailAddress])
 
    */
 
@@ -98,12 +100,12 @@ const PreferenceMailSend = () => {
         </Typography>
       </Grid>
 
-      <Grid item xs={8} className={classes.textGrid}>
-        <Typography variant="body1" gutterBottom style={{ marginTop: 10 }}>
+      <Grid item xs={8} sm={9} className={classes.textGrid}>
+        <Typography variant="body1" gutterBottom>
           すべてのアイテム
         </Typography>
       </Grid>
-      <Grid item xs={4} className={classes.buttonGrid}>
+      <Grid item xs={4} sm={3} className={classes.buttonGrid}>
         <Button
           disabled={noMailAddress}
           size="small"
@@ -116,12 +118,12 @@ const PreferenceMailSend = () => {
         </Button>
       </Grid>
 
-      <Grid item xs={8} className={classes.textGrid}>
-        <Typography variant="body1" gutterBottom style={{ marginTop: 10 }}>
+      <Grid item xs={8} sm={9} className={classes.textGrid}>
+        <Typography variant="body1" gutterBottom>
           ストック数が1以下、または期限が1週間以内のアイテム
         </Typography>
       </Grid>
-      <Grid item xs={4} className={classes.buttonGrid}>
+      <Grid item xs={4} sm={3} className={classes.buttonGrid}>
         <Button
           disabled={noMailAddress}
           size="small"

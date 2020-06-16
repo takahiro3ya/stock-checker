@@ -22,7 +22,7 @@ const items = (state = [], action) => {
       const createItem = {
         categoryIndex: action.categoryIndex,
         itemName: action.itemName,
-        stock: action.stock,
+        stock: String(Number(action.stock)),
         selectedDate: action.selectedDate,
       }
       const itemId = generateUuid()
@@ -34,7 +34,7 @@ const items = (state = [], action) => {
         itemId: action.itemId,
         categoryIndex: action.categoryIndex,
         itemName: action.itemName,
-        stock: action.stock,
+        stock: String(Number(action.stock)),
         selectedDate: action.selectedDate
       }
       // const otherState = state.filter(item => item.itemId !== action.itemId)
