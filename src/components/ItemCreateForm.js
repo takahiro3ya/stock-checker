@@ -19,7 +19,7 @@ import lightGreen from '@material-ui/core/colors/lightGreen'
 
 import AppContext from '../contexts/AppContext'
 import { CREATE_ITEM } from '../actions'
-import ItemFormPickers from './ItemFormPickers'
+import DatePickers from './DatePickers'
 
 function getModalStyle() {
   const top = 50
@@ -104,7 +104,7 @@ const ItemCreateForm = () => {
   const formItemNameHlpTxt = itemName.length > 30 ?
     '1〜30文字　Hint: 30文字以内で入力してください。' :
     '1〜30文字'
-  const formStockHlpTxt =  stock < 0 || stock > 99999 ||
+  const formStockHlpTxt = stock < 0 || stock > 99999 ||
     !Number.isInteger(Number(stock)) ?
     '0〜99999（整数）　Hint: 範囲内の整数を入力してください。' :
     '0〜99999（整数）'
@@ -237,7 +237,7 @@ const ItemCreateForm = () => {
         </Grid>
         <Grid item xs={12} sm={6}>
           {/* 期限を入力するためのコンポーネント */}
-          <ItemFormPickers selectedDate={selectedDate} setSelectedDate={setSelectedDate}/>
+          <DatePickers selectedDate={selectedDate} setSelectedDate={setSelectedDate} />
         </Grid>
       </Grid>
 

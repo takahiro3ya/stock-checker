@@ -1,4 +1,16 @@
 /**
+ * 開発環境では問題なく使用できたが、deploy後にrenderされない事象が発生したため、
+ * 本コンポーネントは使用禁止。
+ * 新しくpickerのコンポーネントを作り直して対応。
+ *
+ * error message
+ * Error: Minified React error #152; visit
+ * https://reactjs.org/docs/error-decoder.html?invariant=152&args[]=We
+ * for the full message or use the non-minified dev environment for
+ * full errors and additional helpful warnings.
+ */
+
+/**
  * Material-UI / @material-ui/pickers
  * https://material-ui.com/components/pickers/#material-ui-pickers
  */
@@ -64,6 +76,7 @@ const useStyles = makeStyles((theme) => ({
 
 const ItemFormPickers = ({ selectedDate, setSelectedDate }) => {
   // const [selectedDate, setSelectedDate] = useState(null) // 親からpropsとして受け取る。
+  const classes = useStyles()
 
   const handleDateChange = (pickDate) => {
     if (pickDate == null) {
@@ -76,7 +89,6 @@ const ItemFormPickers = ({ selectedDate, setSelectedDate }) => {
     }
   }
 
-  const classes = useStyles()
 
   const handlePickerHlpTxt = new Date(selectedDate)
     .toString() === 'Invalid Date' ?

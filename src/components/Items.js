@@ -20,7 +20,8 @@ import ItemStockCount from './ItemStockCount'
 import bigLogo from './images/big-logo-Stock-Checker.png'
 
 const useStyles = makeStyles((theme) => ({
-  root: {
+
+root: {
     display: 'flex', // flex boxにより下記の配置を有効化
     justifyContent: 'center', // 左右中央揃え
     alignItems: 'center',     // 上下中央揃え
