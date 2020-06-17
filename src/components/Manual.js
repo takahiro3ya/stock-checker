@@ -3,7 +3,9 @@ import Typography from '@material-ui/core/Typography'
 import { makeStyles } from '@material-ui/core/styles'
 import SettingsIcon from '@material-ui/icons/Settings'
 import FullscreenIcon from '@material-ui/icons/Fullscreen'
+import ReportProblemIcon from '@material-ui/icons/ReportProblem';
 import InfoIcon from '@material-ui/icons/ErrorOutline'
+import MoreVertIcon from '@material-ui/icons/MoreVert'
 
 const useStyles = makeStyles((theme) => ({
   manualBlock: {
@@ -59,28 +61,50 @@ const Manual = () => {
     <div className={classes.manualBlock}>
       <div className={classes.manualText}>
         <Typography variant="body2">
-          動画の文字や映像が見づらい場合、下記手順で画質を変更できます。
+          動画の文字や映像が見づらい場合、以下の設定をお試しください。
         </Typography>
+
         <Typography variant="body2" className={classes.manualTypography}>
-          下記の動画を選択&ensp;→&ensp;
-          <SettingsIcon className={classes.iconWithText} />
-          &ensp;→&ensp;「画質」&ensp;→「720p60」
-        </Typography>
-        <Typography variant="body2" className={classes.manualTypography}>
-          スマートフォンなど&ensp;
-          <SettingsIcon className={classes.iconWithText} />
-          &ensp;が表示されない場合は、下記のどちらかで&ensp;
-          <SettingsIcon className={classes.iconWithText} />
-          &ensp;を表示できます。
-        </Typography>
-        <Typography variant="body2" className={classes.manualTypography}>
-          1&ensp;下記の動画を選択&ensp;→&ensp;
-          <FullscreenIcon className={classes.iconWithText} />
-          &ensp;(フルスクリーン)
+          <strong>全画面表示</strong>
         </Typography>
         <Typography variant="body2">
-          2&ensp;下記の動画を選択&ensp;→&ensp;YouTubeロゴ&ensp;(youtube.com で視聴する)
+          下記画面を選択&ensp;→&ensp;
+          <FullscreenIcon className={classes.iconWithText} />
+          （画面右下）
         </Typography>
+
+        <Typography variant="body2" className={classes.manualTypography}>
+          <strong>画質変更</strong>
+        </Typography>
+        <Typography variant="body2">
+          下記画面を選択&ensp;→&ensp;
+          <SettingsIcon className={classes.iconWithText} />
+          （画面右下）&ensp;→&ensp;「画質」&ensp;→「720p60」
+        </Typography>
+
+        <Typography variant="body2" className={classes.manualTypography}>
+          <ReportProblemIcon className={classes.headIconWithText} />
+          スマートフォンなどは&ensp;
+          <SettingsIcon className={classes.iconWithText} />
+          &ensp;が表示されず、画質変更できない場合があります。
+        </Typography>
+        <Typography variant="body2">
+          そうした時は、以下の手順で画質変更が可能です。
+        </Typography>
+
+        <Typography variant="body2" className={classes.manualTypography}>
+          <strong>画質変更(スマートフォンなど)</strong>
+        </Typography>
+        <Typography variant="body2">
+          1.&ensp;下記画面を選択&ensp;→&ensp;「Stock Checker - manual」
+          （画面左上）の文字を選択&ensp;→&ensp;YouTubeでこの動画が表示
+        </Typography>
+        <Typography variant="body2">
+          2.&ensp;動画の画面を選択&ensp;→&ensp;
+        <MoreVertIcon className={classes.iconWithText} />
+          （画面右上）&ensp;→&ensp;「画質」&ensp;→「720p60」
+        </Typography>
+
         <Typography variant="body2" className={classes.manualTypography}>
           <InfoIcon className={classes.headIconWithText} />
           これらの設定はYouTubeの仕様により変更される可能性があります。
@@ -106,6 +130,9 @@ const Manual = () => {
           allowFullScreen
         />
       </div>
+
+      {/* 最下部スペース */}
+      <div style={{ margin: 60 }}></div>
     </div>
   )
 }

@@ -40,7 +40,7 @@ const useStyles = makeStyles((theme) => ({
     position: 'absolute',
     width: '90%',
     maxWidth: 660,
-    maxHeight: '85%', // 画面サイズが小さくてもはみ出ないよう設定
+    maxHeight: '95%', // 画面サイズが小さくてもはみ出ないよう設定
     backgroundColor: theme.palette.background.paper,
     border: '1px solid #cecece',
     boxShadow: theme.shadows[5],
