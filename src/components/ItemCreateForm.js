@@ -98,12 +98,15 @@ const ItemCreateForm = () => {
 
   // error propのtypeはBooleanなので、functionだとエラーになるので注意。
   const formCategoryError = Boolean(!categoryIndex)
-  const formItemNameError = Boolean(!itemName) || itemName.length > 30
+  const formItemNameError = Boolean(!itemName) || itemName.length > 30 ||
+    /^( |　)+$/.test(itemName)
   const formStockError = Boolean(!stock) || stock < 0 || stock > 99999 ||
     !Number.isInteger(Number(stock)) // 小数ならtrue
-  const formItemNameHlpTxt = itemName.length > 30 ?
-    '1〜30文字　Hint: 30文字以内で入力してください。' :
-    '1〜30文字'
+  const formItemNameHlpTxt = itemName.length > 30
+    ? '1〜30文字　Hint: 30文字以内で入力してください。'
+    : /^( |　)+$/.test(itemName)
+    ? '1〜30文字　Hint: 空白のみの入力はできません。'
+    : '1〜30文字'
   const formStockHlpTxt = stock < 0 || stock > 99999 ||
     !Number.isInteger(Number(stock)) ?
     '0〜99999（整数）　Hint: 範囲内の整数を入力してください。' :

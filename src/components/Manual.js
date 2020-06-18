@@ -97,7 +97,7 @@ const Manual = () => {
         </Typography>
         <Typography variant="body2">
           1.&ensp;下記画面を選択&ensp;→&ensp;「Stock Checker - manual」
-          （画面左上）の文字を選択&ensp;→&ensp;YouTubeでこの動画が表示
+          （画面左上）の文字を選択&ensp;→&ensp;この動画がYouTubeで表示
         </Typography>
         <Typography variant="body2">
           2.&ensp;動画の画面を選択&ensp;→&ensp;
@@ -107,7 +107,7 @@ const Manual = () => {
 
         <Typography variant="body2" className={classes.manualTypography}>
           <InfoIcon className={classes.headIconWithText} />
-          これらの設定はYouTubeの仕様により変更される可能性があります。
+          これらの設定はYouTubeの仕様により変わる可能性があります。
         </Typography>
       </div>
 

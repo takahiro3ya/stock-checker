@@ -132,6 +132,9 @@ const PreferenceCategoriesForm = () => {
       } else if (!labelNames[index]) {
         obj.helperText = 'Hint: ラベル名を入力してください。'
         obj.error = true
+      } else if (/^( |　)+$/.test(labelNames[index])) {
+        obj.helperText = 'Hint: 空白のみの入力はできません。'
+        obj.error = true
       } else {
         obj.helperText = ''
         obj.error = false

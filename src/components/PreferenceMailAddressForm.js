@@ -117,9 +117,9 @@ const PreferenceMailAddressForm = () => {
   const { width } = useWindowWidth()
 
   // メールアドレスformは、未入力またはメールアドレス形式の文字列のみ変更ボタンを有効化
-  const reMailAddress = /^[\w.!#$%&'*+/=?^`{|}~-]+@\w+([-.]\w+)*\.\w+([-.]\w+)*$/
+  const regExpMailAddress = /^[\w.!#$%&'*+/=?^`{|}~-]+@\w+([-.]\w+)*\.\w+([-.]\w+)*$/
   const updateBtnDisabled = mailAddress === '' ? false :
-    mailAddress.match(reMailAddress) === null || mailAddress.length > 256
+    mailAddress.match(regExpMailAddress) === null || mailAddress.length > 256
   const formMailAddressHlpTxt = updateBtnDisabled ?
     mailAddress.length > 256 ?
       '最大256文字　Hint: 文字数の上限を超えています。' :
