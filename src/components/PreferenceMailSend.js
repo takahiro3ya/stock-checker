@@ -58,19 +58,53 @@ const PreferenceMailSend = () => {
   // const { state, dispatch } = useContext(AppContext)
   const { state } = useContext(AppContext)
   const classes = useStyles()
-  const noMailAddress = Boolean(!state.preferences.mailAddress)
+  const { mailAddress } = state.preferences
+  const noMailAddress = Boolean(!mailAddress)
+  // 自動メール設定機能(サーバサイド未実装のためコメントアウト)
   // const [autoMailChecked, setAutoMailChecked] = useState(state.preferences.autoMail)
 
-  const handleSendMail = e => {
+  const handleSendMailAll = e => {
     e.preventDefault()
 
-    const result = window.confirm(`「${state.preferences.mailAddress}」宛にメールを送信しますか？`)
+    const result = window.confirm('「' + mailAddress +
+      '」宛にメールを送信しますか？\n対象アイテム:　すべて')
     if (result) {
+      console.log(state.items)
       alert('送信しました。')
-      console.log('send')
     }
   }
 
+  const handleSendMailPicked = e => {
+    e.preventDefault()
+
+    const result = window.confirm('「' + mailAddress +
+      '」宛にメールを送信しますか？\n対象アイテム:　ストック数1以下 or 期限1週間後以内')
+    if (result) {
+      // filter()は、map()と同じで非破壊メソッド
+      const itemsPickedStock = state.items.filter(item => item.stock < 2)
+      itemsPickedStock.sort((a, b) => {
+        // return が 0 未満      =>  a を先に表示
+        //           0          =>  なにもしない
+        //           0 より大きい =>  b を先に表示
+        return (a.stock - b.stock)
+      })
+      // ストック数が1以下のアイテム
+      console.log(itemsPickedStock)
+
+      const baseDate = new Date()
+      baseDate.setDate(baseDate.getDate() + 7)
+      const itemsPickedDeadline = state.items.filter(
+        item => new Date(item.selectedDate) < baseDate && item.selectedDate
+      )
+      itemsPickedDeadline.sort((a, b) => {
+        return (new Date(a.selectedDate) - new Date(b.selectedDate))
+      })
+      // 期限が1週間後以内のアイテム
+      console.log(itemsPickedDeadline)
+
+      alert('送信しました。')
+    }
+  }
   /*
   # 自動メール設定機能(サーバサイド未実装のためコメントアウト)
 
@@ -85,10 +119,10 @@ const PreferenceMailSend = () => {
 
   // メールアドレスが未入力に変更されたらスイッチをoffにする。
   useEffect(() => {
-    if (!state.preferences.mailAddress) {
+    if (!mailAddress) {
       setAutoMailChecked(false)
     }
-  }, [state.preferences.mailAddress])
+  }, [mailAddress])
 
    */
 
@@ -112,7 +146,7 @@ const PreferenceMailSend = () => {
           variant="contained"
           startIcon={<SendIcon />}
           className={classes.lightGreenButton}
-          onClick={handleSendMail}
+          onClick={handleSendMailAll}
         >
           <strong>送信</strong>
         </Button>
@@ -120,7 +154,7 @@ const PreferenceMailSend = () => {
 
       <Grid item xs={8} sm={9} className={classes.textGrid}>
         <Typography variant="body1" gutterBottom>
-          ストック数が1以下、または期限が1週間以内のアイテム
+          ストック数が1以下、または期限が1週間後以内のアイテム
         </Typography>
       </Grid>
       <Grid item xs={4} sm={3} className={classes.buttonGrid}>
@@ -130,7 +164,7 @@ const PreferenceMailSend = () => {
           variant="contained"
           startIcon={<SendIcon />}
           className={classes.lightGreenButton}
-          onClick={handleSendMail}
+          onClick={handleSendMailPicked}
         >
           <strong>送信</strong>
         </Button>
