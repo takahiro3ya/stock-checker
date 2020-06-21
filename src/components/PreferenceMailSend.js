@@ -13,6 +13,7 @@ import { lightGreen } from '@material-ui/core/colors'
 
 import AppContext from '../contexts/AppContext'
 // import { AUTO_MAIL } from '../actions'
+import { functions } from '../plugins/firebase'
 
 const useStyles = makeStyles((theme) => ({
   textGrid: {
@@ -63,13 +64,106 @@ const PreferenceMailSend = () => {
   // 自動メール設定機能(サーバサイド未実装のためコメントアウト)
   // const [autoMailChecked, setAutoMailChecked] = useState(state.preferences.autoMail)
 
+  // Firebase Functionsに渡すkey(makeMsgBody()の条件分岐にも利用)
+  const ALL_ITEMS = 'All Items'
+  const PICKED_ITEMS = 'Picked Items'
+
+  // Firebase Functionsに渡すメール本文
+  const makeMsgBody = (key, items, items2 = {}) => {
+    let msgBody = `本メールは、Webアプリケーション「Stock Checker」より通知したものです。
+身に覚えのない方は、お手数ですが削除なさってください。
+
+Stock Checker
+https://stock-checker-38k.web.app/
+
+
+`
+
+    switch (key) {
+      case ALL_ITEMS:
+        msgBody = msgBody + `-------- 対象アイテム:　すべて --------
+
+`
+        if (items.length === 0) {
+          msgBody = msgBody + `なし
+
+`
+        } else {
+          for (const item of items) {
+            msgBody = msgBody + `[ラベル]　${state.categories[item.categoryIndex].value}
+[アイテム名]　${item.itemName}
+[ストック数]　${item.stock}
+[期限]　${item.selectedDate === null ? 'なし' : item.selectedDate}
+
+`
+          }
+        }
+        break
+
+      case PICKED_ITEMS:
+        msgBody = msgBody + `-------- 対象アイテム:　ストック数1以下 --------
+
+`
+        if (items.length === 0) {
+          msgBody = msgBody + `なし
+
+`
+        } else {
+          for (const item of items) {
+            msgBody = msgBody + `[ラベル]　${state.categories[item.categoryIndex].value}
+[アイテム名]　${item.itemName}
+[ストック数]　${item.stock}
+[期限]　${item.selectedDate === null ? 'なし' : item.selectedDate}
+
+`
+          }
+        }
+        msgBody = msgBody + `
+-------- 対象アイテム:　期限1週間後以内 --------
+
+`
+        if (items2.length === 0) {
+          msgBody = msgBody + `なし
+
+`
+        } else {
+          for (const item of items2) {
+            msgBody = msgBody + `[ラベル]　${state.categories[item.categoryIndex].value}
+[アイテム名]　${item.itemName}
+[ストック数]　${item.stock}
+[期限]　${item.selectedDate === null ? 'なし' : item.selectedDate}
+
+`
+          }
+        }
+        break
+
+      default:
+        msgBody = msgBody + `対象アイテムが正しく選択されませんでした。
+
+`
+        break
+
+    }
+    msgBody = msgBody + `
+本メールは送信専用メールアドレスより通知しました。ご返信いただいても返答できませんこと、ご了承ください。`
+    return msgBody
+  }
+
   const handleSendMailAll = e => {
     e.preventDefault()
 
     const result = window.confirm('「' + mailAddress +
       '」宛にメールを送信しますか？\n対象アイテム:　すべて')
     if (result) {
-      console.log(state.items)
+      const sendMail = functions.httpsCallable('sendMail')
+      const data = {
+        key: ALL_ITEMS,
+        mailAddress: state.preferences.mailAddress,
+        msgBody: makeMsgBody(ALL_ITEMS, state.items),
+      }
+      // console.log(data)
+      sendMail(data)
       alert('送信しました。')
     }
   }
@@ -80,6 +174,8 @@ const PreferenceMailSend = () => {
     const result = window.confirm('「' + mailAddress +
       '」宛にメールを送信しますか？\n対象アイテム:　ストック数1以下 or 期限1週間後以内')
     if (result) {
+      const sendMail = functions.httpsCallable('sendMail')
+
       // filter()は、map()と同じで非破壊メソッド
       const itemsPickedStock = state.items.filter(item => item.stock < 2)
       itemsPickedStock.sort((a, b) => {
@@ -89,7 +185,7 @@ const PreferenceMailSend = () => {
         return (a.stock - b.stock)
       })
       // ストック数が1以下のアイテム
-      console.log(itemsPickedStock)
+      // console.log(itemsPickedStock)
 
       const baseDate = new Date()
       baseDate.setDate(baseDate.getDate() + 7)
@@ -100,8 +196,15 @@ const PreferenceMailSend = () => {
         return (new Date(a.selectedDate) - new Date(b.selectedDate))
       })
       // 期限が1週間後以内のアイテム
-      console.log(itemsPickedDeadline)
+      // console.log(itemsPickedDeadline)
 
+      const data = {
+        key: PICKED_ITEMS,
+        mailAddress: state.preferences.mailAddress,
+        msgBody: makeMsgBody(PICKED_ITEMS, itemsPickedStock, itemsPickedDeadline),
+      }
+      // console.log(data)
+      sendMail(data)
       alert('送信しました。')
     }
   }

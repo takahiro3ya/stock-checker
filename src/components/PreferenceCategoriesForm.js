@@ -82,7 +82,7 @@ const PreferenceCategoriesForm = () => {
   const [open, setOpen] = useState(false)
   const { state, dispatch } = useContext(AppContext)
 
-  const initialLabelNames = [...state.categories].map(category => category.value)
+  const initialLabelNames = state.categories.map(category => category.value)
   const [labelNames, setLabelNames] = useState(initialLabelNames)
 
   const initialHlpTxtAndErr = []
@@ -151,6 +151,20 @@ const PreferenceCategoriesForm = () => {
       return false
     })
   }, [hlpTxtAndErr])
+
+  // 「すべてのデータを削除」実行後、modalに削除前の値を表示しないために必要。
+  useEffect(() => {
+    setLabelNames(state.categories.map(category => category.value))
+  }, [state.categories])
+  /**
+   * 下記は上記コードの悪手(無限ループ)
+   * initialLabelNamesはこのコンポーネント内で定義されているため、
+   * useEffect()が実行されるたびに再定義される。結果、無限ループ。
+   * useEffect()の2nd argは、コンポーネントの外で管理されていないといけない。
+   */
+  // useEffect(() => {
+  //   setLabelNames(initialLabelNames)
+  // }, [initialLabelNames])
 
   const body = (
     <div style={modalStyle} className={classes.paper}>

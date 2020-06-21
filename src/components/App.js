@@ -17,7 +17,7 @@ import Manual from './Manual'
 import categoriesJson from './resources/categories.json'
 
 export const APP_KEY = 'StockCheckerKey078SDU84S1'
-export const { defaultCategories } = categoriesJson
+const { defaultCategories } = categoriesJson
 const defaultState = {
   items: [],
   categories: defaultCategories,
@@ -51,8 +51,6 @@ const App = () => {
   ----------------++++
    */
   const [state, dispatch] = useReducer(reducer, {...initialState})
-  // console.log('state')
-  // console.log(state)
 
   useEffect(() => {
     /**

@@ -143,6 +143,12 @@ const PreferenceMailAddressForm = () => {
 
     setOpen(false)
   }
+
+  // 「すべてのデータを削除」実行後、modalに削除前の値を表示しないために必要。
+  useEffect(() => {
+    setMailAddress(state.preferences.mailAddress)
+  }, [state.preferences.mailAddress])
+
   const body = (
     <div style={modalStyle} className={classes.paper}>
       <Typography variant="h6" style={{ marginBottom: 10 }}>
