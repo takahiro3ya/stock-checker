@@ -27,3 +27,4 @@ yarn-error.log*
 /functions
 .firebaserc
 firebase.json
+plugins/
