@@ -1,10 +1,11 @@
-import { UPDATE_CATEGORIES, DELETE_ALL_CATEGORIES } from '../actions'
+import _ from 'lodash'
 
-import { defaultCategories } from '../components/App'
+import { UPDATE_CATEGORIES, DELETE_ALL_CATEGORIES } from '../actions'
+import categoriesJson from '../components/resources/categories.json'
+
+const { defaultCategories } = categoriesJson
 
 const categories = (state = [], action) => {
-  // console.log('reducer initialCategories')
-  // console.log(initialCategories)
   switch (action.type) {
     case UPDATE_CATEGORIES:
       return state.map((category, index) => {
@@ -12,8 +13,8 @@ const categories = (state = [], action) => {
         return category
       })
     case DELETE_ALL_CATEGORIES:
-      // return defaultCategories
-      return defaultCategories
+      // stateがdefaultCategoriesに干渉しないよう、lodashによるディープコピーをreturnする。
+      return _.cloneDeep(defaultCategories)
     default:
       return state
   }
