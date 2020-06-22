@@ -123,8 +123,11 @@ const Manual = () => {
            * rel=0   再生した動画と同じチャンネルから関連動画を表示(一時停止時も他チャンネルの
            *         動画を表示しない)。
            * https://developers.google.com/youtube/player_parameters#Parameters
+           *
+           * プライバシー強化モード(youtube-nocookie.com)
+           * 動画を再生しないかぎり、YouTube側でユーザーの情報を取得しない。
            */
-          src="https://www.youtube.com/embed/UVg4Zz0aS1U?rel=0"
+          src="https://www.youtube-nocookie.com/embed/E_GpL8Lk8a8?rel=0"
           frameBorder={0}
           allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
           allowFullScreen
