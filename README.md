@@ -7,7 +7,7 @@ Stock Checker<br />
 https://stock-checker-38k.web.app/
 
 操作マニュアル動画<br />
-https://stock-checker-38k.web.app/Manual
+https://stock-checker-38k.web.app/manual
 
 ## アプリケーションの構成
 
