@@ -13,6 +13,7 @@ import ResponsiveDrawer from './ResponsiveDrawer'
 import Items from './Items'
 import Preferences from './Preferences'
 import Manual from './Manual'
+import Info from './Info'
 // json-loaderのインストールによって下記形式でJSONをimport可能
 import categoriesJson from './resources/categories.json'
 
@@ -83,8 +84,11 @@ const App = () => {
             <Route path="/preferences" exact>
               <Preferences />
             </Route>
-            <Route path="/Manual" exact>
+            <Route path="/manual" exact>
               <Manual />
+            </Route>
+            <Route path="/info" exact>
+              <Info />
             </Route>
             {/* URLがヒットしないときにNot Found画面を表示 */}
             <Route>

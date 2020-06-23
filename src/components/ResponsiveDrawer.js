@@ -20,6 +20,7 @@ import MenuIcon from '@material-ui/icons/Menu'
 import HomeIcon from '@material-ui/icons/Home'
 import SettingsIcon from '@material-ui/icons/Settings'
 import YouTubeIcon from '@material-ui/icons/YouTube'
+import InfoIcon from '@material-ui/icons/Info'
 
 import logo from './images/logo-Stock-Checker.png'
 
@@ -102,9 +103,13 @@ const ResponsiveDrawer = props => {
           <ListItemIcon><SettingsIcon /></ListItemIcon>
           <ListItemText primary='設定' />
         </ListItem>
-        <ListItem button onClick={() => handleDrawerLink('/Manual')}>
+        <ListItem button onClick={() => handleDrawerLink('/manual')}>
           <ListItemIcon><YouTubeIcon /></ListItemIcon>
           <ListItemText primary='マニュアル' />
+        </ListItem>
+        <ListItem button onClick={() => handleDrawerLink('/info')}>
+          <ListItemIcon><InfoIcon /></ListItemIcon>
+          <ListItemText primary='情報' />
         </ListItem>
       </List>
     </div>
