@@ -9,9 +9,9 @@ https://stock-checker-38k.web.app/
 操作マニュアル動画<br />
 https://stock-checker-38k.web.app/manual
 
-## アプリケーションの構成
+## 使用技術
 
-### 全般
+### 全体構成
 
 React: https://ja.reactjs.org/<br />
 Create React App: https://create-react-app.dev/
